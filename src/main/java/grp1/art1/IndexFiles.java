@@ -152,7 +152,7 @@ public class IndexFiles {
 //			}
 		}
 		sc.close();
-		writer.close();
+		//writer.close();
 	}
 
 }

@@ -42,11 +42,6 @@ public class App {
 		String queryPath = null;
 		String query_result_Path = null;
 
-		// String usage = "java org.apache.lucene.demo.IndexFiles"
-		// + " [-index INDEX_PATH] [-docs DOCS_PATH] [-update]\n\n"
-		// + "This indexes the documents in DOCS_PATH, creating a Lucene index"
-		// + "in INDEX_PATH that can be searched with SearchFiles";
-		//
 		String indexPath = null;
 		String scorePath = null;
 		String documentPath = null;
@@ -65,9 +60,6 @@ public class App {
 			System.out.println("3rd argument is null");
 			System.exit(1);
 		}
-		// else if( count == 3){
-		// System.out.println("2nd argument is null");
-		// }
 		else if (count > 3) {
 			System.out.println("arguments exceeded");
 			System.exit(1);
@@ -109,73 +101,21 @@ public class App {
 		if (Files.notExists(path)) {
 			System.out.println("no cran dir exists");
 			System.exit(1);
-		} else {
-			// System.out.println("cran dir exists");
 		}
 
 		path = Paths.get(indexPath);
 		if (Files.notExists(path)) {
 			System.out.println("no dir exists");
 			new File(indexPath).mkdirs();
-		} else {
-			// System.out.println("dir exists");
+			System.out.println("\n Index dir created");
 		}
 
 		path = Paths.get(scorePath);
 		if (Files.notExists(path)) {
 			System.out.println("no dir exists");
 			new File(scorePath).mkdirs();
-		} else {
-			// System.out.println("dir exists");
+			System.out.println("\n Score dir created");			
 		}
-
-		// indexPath = args[0];
-		// documentPath = args[1];
-		// query_path = args[2];
-		// qres_path = args[3];
-		// create = args[4];
-		// numAnalyzer = args[5];
-
-		// for (int i = 0; i < args.length; i++) {
-		// if ("-index".equals(args[i])) {
-		// indexPath = args[i + 1];
-		// i++;
-		// } else if ("-docs".equals(args[i])) {
-		// documentPath = args[i + 1];
-		// i++;
-		// } else if ("-query".equals(args[i])) {
-		// query_path = args[i + 1];
-		// i++;
-		// } else if ("-qres".equals(args[i])) {
-		// qres_path = args[i + 1];
-		// i++;
-		// } else if ("-update".equals(args[i])) {
-		// create = false;
-		// }
-		// }
-		//
-
-		// if (documentPath == null) {
-		// System.err.println("dir error"); //"Usage: " + usage);
-		// System.exit(1);
-		// }
-		//
-		// final Path docDir = Paths.get(documentPath);
-		// if (!Files.isReadable(docDir)) {
-		// System.out.println("Document directory '" +docDir.toAbsolutePath()+ "' does
-		// not exist or is not readable, please check the path");
-		// System.exit(1);
-		// }
-
-		// System.out.println( "Hello World!" );
-
-		// indP = "C:\\Users\\robin\\Desktop\\TCD\\4 IR & web search\\cran\\index\\";
-		// docsPath = "C:\\Users\\robin\\Desktop\\TCD\\4 IR & web
-		// search\\cran\\cran.all.1400";
-		// queryPath = "C:\\Users\\robin\\Desktop\\TCD\\4 IR & web
-		// search\\cran\\cran.qry";
-		// query_result_Path = "C:\\Users\\robin\\Desktop\\TCD\\4 IR & web
-		// search\\cran\\cranqrel";
 
 		indP = indexPath;
 		docsPath = documentPath;
@@ -184,20 +124,12 @@ public class App {
 
 		IndexFiles.cranIndexer(indP, docsPath, iwcSim, valAnalyzer);
 		SearchEngine.indSearcher(indP, queryPath, valAnalyzer, iwcSim);
-		// System.out.println("Score File Writing completed");
 
-		//String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-		//String file_score_path = indP + "score\\qscores_" + timeStamp + ".txt";
 		String file_score_path = indP + "score/original_scores.txt";
 		
 		PrintWriter outp1 = new PrintWriter(file_score_path);
-		
-		
-		//FileOutputStream out = new FileOutputStream(file_score_path);
-		 //BufferedWriter outWriter = new BufferedWriter(new OutputStreamWriter((file_score_path));
 		List<String> lines = Files.readAllLines(new File(query_result_Path).toPath());
-		// String p1 = lines.get(0);
-		// String p2 = lines.get(1);
+		
 		int ij = 1;
 
 		String all_score = null;
@@ -206,13 +138,9 @@ public class App {
 		ar = new ArrayList<String>();
 
 		for (String line : lines) {
-			// Do whatever you want
 			// System.out.println("p" + ij + " = " + line);
 			String[] op = line.split(" ");
 			// System.out.println(op[0]);
-			// System.out.println(op[1]);
-			// System.out.println(op[2]);
-			// System.out.println(op[3]);
 			int num_rel_code = 0;
 			int inverse_rel_num = 0;
 			try {
@@ -226,33 +154,14 @@ public class App {
 				continue;
 			}
 
-			// System.out.println(ij + ") " + op[0] +" " + op[1] + " " + num_rel_code + " "
-			// + inverse_rel_num );
 			data_write_to_file = (op[0] + " 0 " + op[1] + " " + inverse_rel_num);//.concat(System.lineSeparator());
 			if (ij!=1) {
 				data_write_to_file = "\n" + data_write_to_file;
 			}
-			//String s1 = data_write_to_file;
-			
 			outp1.print(data_write_to_file);
-			
-			//ar.add(s1);
-			// out.write(data_write_to_file.getBytes());
-
 			ij++;
 		}
-
-//		int j = 0;
-//		String str1;
-//		while (ar.size() > j) {
-//			// System.out.println(ar.get(j));
-//			str1 = ar.get(j);
-//			out.write(str1.getBytes());
-//			j++;
-//		}
 		outp1.close();
-		//out.close();
-		System.out.println("Query file completed");
-
+		System.out.println("Orignal Result file transformation completed");
 	}
 }
